@@ -48,7 +48,7 @@ def product_version(product: Product, version_cache: VersionCache):
         request = f"v1/products/{product}/versions\n"
 
         try:
-            with socket.create_connection((host, port), timeout=10) as sock:
+            with socket.create_connection((host, port), timeout=30) as sock:
                 sock.sendall(request.encode())
                 response = []
                 while True:
