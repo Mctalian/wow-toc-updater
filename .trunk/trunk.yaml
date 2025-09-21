@@ -31,8 +31,10 @@ lint:
     - trufflehog@3.90.8
     - yamllint@1.37.1
   ignore:
+    - linters: [ALL]
+      paths: [dist/**]
     - linters: [bandit]
-      paths: [tests/*]
+      paths: [tests/**]
 actions:
   enabled:
     - trunk-announce

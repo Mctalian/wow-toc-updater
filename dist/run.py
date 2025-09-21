@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 """Runner script for the bundled TOC interface updater."""
 
-import os
 import sys
+import os
 
 # Add bundled dependencies to path
 script_dir = os.path.dirname(os.path.abspath(__file__))
