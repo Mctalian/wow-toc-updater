@@ -1,8 +1,8 @@
-name: TOC Interface Updater
+name: WoW TOC Updater
 description: Updates Interface versions found in World of Warcraft TOC metadata files
 branding:
   icon: tag
-  color: yellow
+  color: green
 inputs:
   flavor:
     description: Interface version to default to
