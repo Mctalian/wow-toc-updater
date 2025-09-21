@@ -3,15 +3,15 @@ name = "toc-interface-updater"
 version = "0.1.0"
 description = ""
 authors = ["Rob Anderson <Mctalian@users.noreply.github.com>"]
-license = "LICENSE.txt"
+license = "LICENSE"
 readme = "README.md"
-package-mode = false
+package-mode = true
 
 [tool.poetry.dependencies]
 python = "^3.13"
 requests = "^2.31.0"
 
-[tool.poetry.dev-dependencies]
+[tool.poetry.group.dev.dependencies]
 pytest = "^8.3.4"
 pytest-cov = "^6.0.0"
 

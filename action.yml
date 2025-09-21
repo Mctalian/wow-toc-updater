@@ -14,11 +14,7 @@ inputs:
 runs:
   using: composite
   steps:
-    - name: Set up Python
-      uses: actions/setup-python@v5
-      with:
-        python-version: 3.x
-
     - name: Run the TOC updater script
-      run: python3 ${GITHUB_ACTION_PATH}/toc_interface_updater/update.py -f ${{ inputs.flavor }} ${{ inputs.beta != '' && '-b' || '' }} ${{ inputs.ptr != '' && '-p' || '' }}
+      run: |
+        python3 ${GITHUB_ACTION_PATH}/dist/run.py -f ${{ inputs.flavor }} ${{ inputs.beta != '' && '-b' || '' }} ${{ inputs.ptr != '' && '-p' || '' }}
       shell: bash

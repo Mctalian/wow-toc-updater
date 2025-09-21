@@ -1,0 +1,76 @@
+name: PR Checks
+
+on:
+  pull_request:
+    branches: [main]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+
+      - name: Install Poetry
+        uses: snok/install-poetry@v1
+        with:
+          virtualenvs-create: true
+          virtualenvs-in-project: true
+
+      - name: Install dependencies
+        run: poetry install
+
+      - name: Run tests
+        run: poetry run pytest
+
+  check-dist:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+
+      - name: Install Poetry
+        uses: snok/install-poetry@v1
+        with:
+          virtualenvs-create: true
+          virtualenvs-in-project: true
+
+      - name: Install dependencies
+        run: poetry install --only=main
+
+      - name: Build distribution
+        run: python build_bundle.py
+
+      - name: Check if dist is up-to-date
+        run: |
+          if [ -n "$(git status --porcelain dist/)" ]; then
+            echo "❌ Distribution is out of date!"
+            echo ""
+            echo "The following files have changes:"
+            git status --porcelain dist/
+            echo ""
+            echo "To fix this, run the following command locally and commit the changes:"
+            echo "  python build_bundle.py"
+            echo ""
+            echo "Changed files diff:"
+            git diff dist/
+            exit 1
+          else
+            echo "✅ Distribution is up-to-date!"
+          fi

@@ -1,0 +1,2 @@
+# Dependencies bundled in lib/
+requests>=2.31.0
