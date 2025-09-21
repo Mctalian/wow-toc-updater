@@ -21,7 +21,7 @@ def toc_files(tmp_path):
 
 @pytest.fixture
 def product_versions():
-    from toc_interface_updater.update import product_version
+    from toc_interface_updater.version_client import product_version
 
     versions = {}
     product_version("wow", versions)
