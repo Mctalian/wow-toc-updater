@@ -39,7 +39,6 @@ def detect_existing_versions(
     if single_line_multi:
         single_line_multi = not multi
         if single_line_multi:
-            print(f"Detected single line multi: {single_line_multi}")
             detected_version_strings = (
                 single_line_pattern.search(content)
                 .group(0)
@@ -94,7 +93,6 @@ def get_versions_from_detected(
     for d_version in detected_versions:
         if d_version.strip() not in versions:
             major = int(d_version.strip()[:-4])
-            print(f"Detected major version: {major} from {d_version.strip()}")
 
             if major == 1:
                 versions.add(product_version("wow_classic_era", version_cache))
@@ -124,7 +122,6 @@ def get_versions_from_detected(
                     beta_version = product_version("wow_beta", version_cache)
                     if int(d_version) < int(beta_version):
                         versions.add(beta_version)
-                    print(f"Beta detected, single line multi: {versions}")
                 if test:
                     ptr_version = product_version("wowt", version_cache)
                     if int(d_version) < int(ptr_version):
@@ -132,7 +129,6 @@ def get_versions_from_detected(
                     ptr_version = product_version("wowxptr", version_cache)
                     if int(d_version) < int(ptr_version):
                         versions.add(ptr_version)
-                    print(f"Test detected, single line multi: {versions}")
 
     return versions
 

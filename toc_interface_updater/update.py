@@ -45,7 +45,6 @@ def update_versions(
     # Get all versions for this product
     versions = collect_all_versions(product, beta, test, version_cache)
     interface = ", ".join(sorted(versions, key=lambda x: int(x)))
-    print(f"Determined interface versions: {interface}")
 
     # Detect existing versions and determine format
     detected_versions, single_line_multi = detect_existing_versions(
