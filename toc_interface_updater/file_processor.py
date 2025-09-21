@@ -4,6 +4,7 @@ import os
 import re
 from typing import List
 
+from .constants import TocSuffix
 from .types import FullProduct, VersionCache
 
 # ANSI escape sequences for colors and formatting
@@ -52,11 +53,11 @@ def get_product_for_file(
         return default_flavor, False
 
     # File matches pattern, determine specific product
-    if "Mainline" in file_path:
+    if TocSuffix.MAINLINE in file_path:
         return "wow", False
-    elif "Classic" in file_path or "Mists" in file_path:
+    elif TocSuffix.CLASSIC in file_path or TocSuffix.CURRENT_CLASSIC in file_path:
         return "wow_classic", False
-    elif "Vanilla" in file_path:
+    elif TocSuffix.VANILLA in file_path:
         return "wow_classic_era", False
 
     return default_flavor, False
@@ -69,7 +70,7 @@ def process_files(
     from .update import update_versions  # Import here to avoid circular imports
 
     modified_files: List[str] = []
-    pattern = re.compile(r"[-_](Mainline|Classic|Mists|Vanilla)\.toc$")
+    pattern = TocSuffix.get_pattern()
 
     for root, _, files in os.walk("."):
         for file in files:

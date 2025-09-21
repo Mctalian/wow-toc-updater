@@ -1,5 +1,6 @@
 """Unit tests for version resolver functions."""
 
+from toc_interface_updater.constants import InterfaceDirective
 from toc_interface_updater.version_resolver import (
     detect_existing_versions,
     get_beta_products,
@@ -46,23 +47,23 @@ class TestVersionDetection:
 
     def test_detect_existing_versions_single_line_multi(self):
         """Test detection of single line multi-version interface."""
-        content = "## Interface: 110000, 110001\n## Title: Test Addon"
+        content = f"{InterfaceDirective.BASE} 110000, 110001\n## Title: Test Addon"
         versions, is_single_multi = detect_existing_versions(content, "wow", False)
         assert versions == {"110000", "110001"}
         assert is_single_multi
 
     def test_detect_existing_versions_single_line_not_multi(self):
         """Test detection of single line interface when multi is requested."""
-        content = "## Interface: 110000, 110001\n## Title: Test Addon"
+        content = f"{InterfaceDirective.BASE} 110000, 110001\n## Title: Test Addon"
         versions, is_single_multi = detect_existing_versions(content, "wow", True)
         # When multi=True is requested but we have single line multi,
         # the function returns empty set because it expects multi-line format
         assert versions == set()
         assert not is_single_multi
 
-    def test_detect_existing_versions_wow_classic_mists(self):
-        """Test detection of WoW Classic Mists interface."""
-        content = "## Interface-Mists: 40400\n## Title: Test Addon"
+    def test_detect_existing_versions_wow_current_classic(self):
+        """Test detection of WoW Current Classic interface."""
+        content = f"{InterfaceDirective.CURRENT_CLASSIC} 40400\n## Title: Test Addon"
         versions, is_single_multi = detect_existing_versions(
             content, "wow_classic", True
         )
@@ -70,9 +71,9 @@ class TestVersionDetection:
         assert not is_single_multi
 
     def test_detect_existing_versions_wow_classic_both(self):
-        """Test detection of both Mists and Classic interfaces."""
-        content = """## Interface-Mists: 40400
-## Interface-Classic: 11503
+        """Test detection of both Current Classic xpac name and Classic interfaces."""
+        content = f"""{InterfaceDirective.CURRENT_CLASSIC} 40400
+{InterfaceDirective.CLASSIC} 11503
 ## Title: Test Addon"""
         versions, is_single_multi = detect_existing_versions(
             content, "wow_classic", True
@@ -82,7 +83,7 @@ class TestVersionDetection:
 
     def test_detect_existing_versions_vanilla(self):
         """Test detection of Vanilla interface."""
-        content = "## Interface-Vanilla: 11503\n## Title: Test Addon"
+        content = f"{InterfaceDirective.VANILLA} 11503\n## Title: Test Addon"
         versions, is_single_multi = detect_existing_versions(
             content, "wow_classic_era", True
         )

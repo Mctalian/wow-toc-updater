@@ -2,6 +2,7 @@
 
 import argparse
 
+from .constants import TocSuffix
 from .file_processor import process_files
 from .types import GameFlavor, VersionCache
 
@@ -13,11 +14,14 @@ YELLOW = "\033[33m"
 
 def flavor_type(value):
     """Convert string flavor to GameFlavor enum."""
+    # Get the current classic expansion name (lowercase) for CLI usage
+    current_classic_name = TocSuffix.CURRENT_CLASSIC.lower()
+    
     flavor_map = {
         "retail": GameFlavor.WOW,
         "mainline": GameFlavor.WOW,
         "classic": GameFlavor.WOW_CLASSIC,
-        "mists": GameFlavor.WOW_CLASSIC,
+        current_classic_name: GameFlavor.WOW_CLASSIC,  # Dynamic current classic
         "classic_era": GameFlavor.WOW_CLASSIC_ERA,
         "vanilla": GameFlavor.WOW_CLASSIC_ERA,
     }
@@ -30,7 +34,10 @@ def flavor_type(value):
 
 def main():
     """Main CLI entry point."""
-    parser = argparse.ArgumentParser(description="Version Replacer")
+    # Get the current classic expansion name for help text
+    current_classic_name = TocSuffix.CURRENT_CLASSIC.lower()
+    
+    parser = argparse.ArgumentParser(description="WoW TOC Updater")
     parser.add_argument(
         "-b", "--beta", action="store_true", help="Include beta versions"
     )
@@ -42,7 +49,7 @@ def main():
         "--flavor",
         type=flavor_type,
         default=GameFlavor.WOW,
-        help="Game flavor (retail, mainline, classic, Mists, classic_era, vanilla)",
+        help=f"Game flavor (retail, mainline, classic, {current_classic_name}, classic_era, vanilla)",
     )
     args = parser.parse_args()
 

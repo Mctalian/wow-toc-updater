@@ -1,5 +1,6 @@
 import difflib
 
+from toc_interface_updater.constants import InterfaceDirective, TocSuffix
 from toc_interface_updater.update import main
 
 
@@ -15,12 +16,12 @@ def test_update_toc_files(toc_files, product_versions, monkeypatch):
 
     # Check the contents of the updated files
     expected_content = {
-        "default.toc": f"## Interface: {product_versions['wow']}\n\nfile.lua\n",
-        "specific-Classic.toc": f"## Interface: {product_versions['wow_classic']}\n\nfile.lua\n",
-        "multi.toc": f"## Interface: {product_versions['wow']}\n## Interface-Vanilla: {product_versions['wow_classic_era']}\n## Interface-Classic: {product_versions['wow_classic']}\n## Interface-Mists: {product_versions['wow_classic']}\n\nfile.lua\n",
-        "multi-oneline.toc": f"## Interface: {product_versions['wow_classic_era']}, {product_versions['wow_classic']}, {product_versions['wow']}\n\nfile.lua\n",
-        "specific-Mainline.toc": f"## Interface: {product_versions['wow']}\n\nfile.lua\n",
-        "specific_Mists.toc": f"## Interface: {product_versions['wow_classic']}\n\nfile.lua\n",
+        "default.toc": f"{InterfaceDirective.BASE} {product_versions['wow']}\n\nfile.lua\n",
+        f"specific-{TocSuffix.CLASSIC}.toc": f"{InterfaceDirective.BASE} {product_versions['wow_classic']}\n\nfile.lua\n",
+        "multi.toc": f"{InterfaceDirective.BASE} {product_versions['wow']}\n{InterfaceDirective.VANILLA} {product_versions['wow_classic_era']}\n{InterfaceDirective.CLASSIC} {product_versions['wow_classic']}\n{InterfaceDirective.CURRENT_CLASSIC} {product_versions['wow_classic']}\n\nfile.lua\n",
+        "multi-oneline.toc": f"{InterfaceDirective.BASE} {product_versions['wow_classic_era']}, {product_versions['wow_classic']}, {product_versions['wow']}\n\nfile.lua\n",
+        f"specific-{TocSuffix.MAINLINE}.toc": f"{InterfaceDirective.BASE} {product_versions['wow']}\n\nfile.lua\n",
+        f"specific_{TocSuffix.CURRENT_CLASSIC}.toc": f"{InterfaceDirective.BASE} {product_versions['wow_classic']}\n\nfile.lua\n",
     }
 
     for filename, expected in expected_content.items():
@@ -81,12 +82,12 @@ def test_update_toc_files_with_ptr_flag(toc_files, product_versions, monkeypatch
 
     # Check the contents of the updated files
     expected_content = {
-        "default.toc": f"## Interface: {retail_ptr_versions}\n\nfile.lua\n",
-        "specific-Classic.toc": f"## Interface: {classic_ptr_versions}\n\nfile.lua\n",
-        "multi.toc": f"## Interface: {retail_ptr_versions}\n## Interface-Vanilla: {classic_era_ptr_versions}\n## Interface-Classic: {classic_ptr_versions}\n## Interface-Mists: {classic_ptr_versions}\n\nfile.lua\n",
-        "multi-oneline.toc": f"## Interface: {classic_era_ptr_versions}, {classic_ptr_versions}, {retail_ptr_versions}\n\nfile.lua\n",
-        "specific-Mainline.toc": f"## Interface: {retail_ptr_versions}\n\nfile.lua\n",
-        "specific_Mists.toc": f"## Interface: {classic_ptr_versions}\n\nfile.lua\n",
+        "default.toc": f"{InterfaceDirective.BASE} {retail_ptr_versions}\n\nfile.lua\n",
+        f"specific-{TocSuffix.CLASSIC}.toc": f"{InterfaceDirective.BASE} {classic_ptr_versions}\n\nfile.lua\n",
+        "multi.toc": f"{InterfaceDirective.BASE} {retail_ptr_versions}\n{InterfaceDirective.VANILLA} {classic_era_ptr_versions}\n{InterfaceDirective.CLASSIC} {classic_ptr_versions}\n{InterfaceDirective.CURRENT_CLASSIC} {classic_ptr_versions}\n\nfile.lua\n",
+        "multi-oneline.toc": f"{InterfaceDirective.BASE} {classic_era_ptr_versions}, {classic_ptr_versions}, {retail_ptr_versions}\n\nfile.lua\n",
+        f"specific-{TocSuffix.MAINLINE}.toc": f"{InterfaceDirective.BASE} {retail_ptr_versions}\n\nfile.lua\n",
+        f"specific_{TocSuffix.CURRENT_CLASSIC}.toc": f"{InterfaceDirective.BASE} {classic_ptr_versions}\n\nfile.lua\n",
     }
 
     for filename, expected in expected_content.items():
@@ -134,6 +135,7 @@ def test_update_toc_files_with_beta_flag(toc_files, product_versions, monkeypatc
     classic_era_beta_versions = set()
     base_classic_era_version = product_versions["wow_classic_era"]
     classic_era_beta_versions.add(base_classic_era_version)
+    # The classic era beta product does not return any version information
     # classic_era_beta_check = product_versions['wow_classic_era_beta']
     # if int(classic_era_beta_check) > int(base_classic_era_version):
     #     classic_era_beta_versions.add(classic_era_beta_check)
@@ -146,12 +148,12 @@ def test_update_toc_files_with_beta_flag(toc_files, product_versions, monkeypatc
 
     # Check the contents of the updated files
     expected_content = {
-        "default.toc": f"## Interface: {retail_beta_versions}\n\nfile.lua\n",
-        "specific-Classic.toc": f"## Interface: {classic_beta_versions}\n\nfile.lua\n",
-        "multi.toc": f"## Interface: {retail_beta_versions}\n## Interface-Vanilla: {classic_era_beta_versions}\n## Interface-Classic: {classic_beta_versions}\n## Interface-Mists: {classic_beta_versions}\n\nfile.lua\n",
-        "multi-oneline.toc": f"## Interface: {classic_era_beta_versions}, {classic_beta_versions}, {retail_beta_versions}\n\nfile.lua\n",
-        "specific-Mainline.toc": f"## Interface: {retail_beta_versions}\n\nfile.lua\n",
-        "specific_Mists.toc": f"## Interface: {classic_beta_versions}\n\nfile.lua\n",
+        "default.toc": f"{InterfaceDirective.BASE} {retail_beta_versions}\n\nfile.lua\n",
+        f"specific-{TocSuffix.CLASSIC}.toc": f"{InterfaceDirective.BASE} {classic_beta_versions}\n\nfile.lua\n",
+        "multi.toc": f"{InterfaceDirective.BASE} {retail_beta_versions}\n{InterfaceDirective.VANILLA} {classic_era_beta_versions}\n{InterfaceDirective.CLASSIC} {classic_beta_versions}\n{InterfaceDirective.CURRENT_CLASSIC} {classic_beta_versions}\n\nfile.lua\n",
+        "multi-oneline.toc": f"{InterfaceDirective.BASE} {classic_era_beta_versions}, {classic_beta_versions}, {retail_beta_versions}\n\nfile.lua\n",
+        f"specific-{TocSuffix.MAINLINE}.toc": f"{InterfaceDirective.BASE} {retail_beta_versions}\n\nfile.lua\n",
+        f"specific_{TocSuffix.CURRENT_CLASSIC}.toc": f"{InterfaceDirective.BASE} {classic_beta_versions}\n\nfile.lua\n",
     }
 
     for filename, expected in expected_content.items():

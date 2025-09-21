@@ -3,6 +3,7 @@
 import re
 from typing import List, Set
 
+from .constants import InterfaceDirective
 from .types import BetaProduct, FullProduct, TestProduct, VersionCache
 
 
@@ -33,7 +34,10 @@ def detect_existing_versions(
     Detect existing versions from the content and determine if it's single line multi.
     Returns (detected_versions, is_single_line_multi)
     """
-    single_line_pattern = re.compile(r"^(## Interface:).*\,.*$", flags=re.MULTILINE)
+    # Check if it's single line multi-version format (comma-separated)
+    single_line_pattern = re.compile(
+        f"^({re.escape(InterfaceDirective.BASE)}).*\\,.*$", flags=re.MULTILINE
+    )
     single_line_multi = bool(single_line_pattern.search(content))
 
     if single_line_multi:
@@ -51,11 +55,25 @@ def detect_existing_versions(
     # Handle multi-line detection for specific products
     detected_version_strings = []
     if product == "wow_classic":
-        mists_pattern = re.compile(r"^(## Interface-Mists:).*$", flags=re.MULTILINE)
-        classic_pattern = re.compile(r"^(## Interface-Classic:).*$", flags=re.MULTILINE)
-        if mists_pattern.search(content):
+        # Check for Current Classic directive
+        current_classic_pattern = re.compile(
+            InterfaceDirective.get_directive_pattern(
+                InterfaceDirective.CURRENT_CLASSIC
+            ),
+            flags=re.MULTILINE,
+        )
+        classic_pattern = re.compile(
+            InterfaceDirective.get_directive_pattern(InterfaceDirective.CLASSIC),
+            flags=re.MULTILINE,
+        )
+
+        if current_classic_pattern.search(content):
             detected_version_strings.extend(
-                mists_pattern.search(content).group(0).split(":")[1].strip().split(",")
+                current_classic_pattern.search(content)
+                .group(0)
+                .split(":")[1]
+                .strip()
+                .split(",")
             )
         if classic_pattern.search(content):
             detected_version_strings.extend(
@@ -66,7 +84,10 @@ def detect_existing_versions(
                 .split(",")
             )
     elif product == "wow_classic_era":
-        vanilla_pattern = re.compile(r"^(## Interface-Vanilla:).*$", flags=re.MULTILINE)
+        vanilla_pattern = re.compile(
+            InterfaceDirective.get_directive_pattern(InterfaceDirective.VANILLA),
+            flags=re.MULTILINE,
+        )
         if vanilla_pattern.search(content):
             detected_version_strings.extend(
                 vanilla_pattern.search(content)

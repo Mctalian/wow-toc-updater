@@ -3,13 +3,16 @@ import pytest
 
 @pytest.fixture
 def toc_files(tmp_path):
+    # Import centralized directives
+    from toc_interface_updater.constants import InterfaceDirective, TocSuffix
+
     toc_content = {
-        "default.toc": "## Interface: 110007\n\nfile.lua\n",
-        "specific-Classic.toc": "## Interface: 40401\n\nfile.lua\n",
-        "multi.toc": "## Interface: 110007\n## Interface-Vanilla: 11505\n## Interface-Classic: 40401\n## Interface-Mists: 40400\n\nfile.lua\n",
-        "multi-oneline.toc": "## Interface: 11505, 40401, 110007\n\nfile.lua\n",
-        "specific-Mainline.toc": "## Interface: 110007\n\nfile.lua\n",
-        "specific_Mists.toc": "## Interface: 40401\n\nfile.lua\n",
+        "default.toc": f"{InterfaceDirective.BASE} 110007\n\nfile.lua\n",
+        f"specific-{TocSuffix.CLASSIC}.toc": f"{InterfaceDirective.BASE} 40401\n\nfile.lua\n",
+        "multi.toc": f"{InterfaceDirective.BASE} 110007\n{InterfaceDirective.VANILLA} 11505\n{InterfaceDirective.CLASSIC} 40401\n{InterfaceDirective.CURRENT_CLASSIC} 40400\n\nfile.lua\n",
+        "multi-oneline.toc": f"{InterfaceDirective.BASE} 11505, 40401, 110007\n\nfile.lua\n",
+        f"specific-{TocSuffix.MAINLINE}.toc": f"{InterfaceDirective.BASE} 110007\n\nfile.lua\n",
+        f"specific_{TocSuffix.CURRENT_CLASSIC}.toc": f"{InterfaceDirective.BASE} 40401\n\nfile.lua\n",
     }
 
     for filename, content in toc_content.items():
