@@ -1,14 +1,15 @@
 import pytest
 
+
 @pytest.fixture
 def toc_files(tmp_path):
     toc_content = {
         "default.toc": "## Interface: 110007\n\nfile.lua\n",
         "specific-Classic.toc": "## Interface: 40401\n\nfile.lua\n",
-        "multi.toc": "## Interface: 110007\n## Interface-Vanilla: 11505\n## Interface-Classic: 40401\n## Interface-Cata: 40400\n\nfile.lua\n",
+        "multi.toc": "## Interface: 110007\n## Interface-Vanilla: 11505\n## Interface-Classic: 40401\n## Interface-Mists: 40400\n\nfile.lua\n",
         "multi-oneline.toc": "## Interface: 11505, 40401, 110007\n\nfile.lua\n",
         "specific-Mainline.toc": "## Interface: 110007\n\nfile.lua\n",
-        "specific_Cata.toc": "## Interface: 40401\n\nfile.lua\n"
+        "specific_Mists.toc": "## Interface: 40401\n\nfile.lua\n",
     }
 
     for filename, content in toc_content.items():
@@ -16,6 +17,7 @@ def toc_files(tmp_path):
         file_path.write_text(content)
 
     return tmp_path
+
 
 @pytest.fixture
 def product_versions():
